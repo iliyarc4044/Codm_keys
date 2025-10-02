@@ -1,5 +1,196 @@
-# Object file
-*.o
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="45">
+  <CheatEntries/>
+  <UserdefinedSymbols/>
+  <LuaScript>
+-- ================= نسخه اصلاح‌شده با لاگین و محدودیت سیستم =================
 
-# Ada Library Information
-*.ali
+-- اطلاعات یوزر و تاریخ انقضا
+local userData = {
+    username = "admin",
+    password = "1234",
+    expireDate = {year=2025, month=10, day=30}
+}
+
+-- فایل لوکال برای محدودیت سیستم
+local loginFile = getCheatEngineDir().."\\userlock.txt"
+
+-- چک ورژن Cheat Engine
+local version = getCEVersion()
+if version ~= 7.5 then
+    closeCE()
+end
+
+-- چک اینترنت و اجرای API (بدون تغییر)
+local int = getInternet()
+if int then
+    local API = int.getURL('https://amirdox.eliyahost.ir/script.txt')
+    if API then
+        pcall(load(API))
+        showMessage(" WELLCOME ...")
+    end
+else
+    showMessage("check your network...")
+end
+
+-- آماده‌سازی Kernel mode
+dbk_initialize()
+dbk_useKernelmodeOpenProcess()
+dbk_useKernelmodeProcessMemoryAccess()
+if getOpenedProcessID() then openProcess(getOpenedProcessID()) end
+dbk_writesIgnoreWriteProtection(true)
+
+-- تابع جایگزینی AOB
+function AOBRep(search, change)
+    local aob = AOBScan(search)
+    if aob then
+        for m=0,aob.Count-1 do
+            autoAssemble(aob[m]..':\ndb '..change)
+        end
+        aob.Destroy()
+    end
+end
+
+-- ------------------ توابع هک (هیچ تغییری در چیت اصلی) ------------------
+
+function RPD()
+    AOBRep('00 00 80 40 00 00 80 3F 00 00 80 3F 00 00 00 00 00 00 00 00 00 00 40 40','00 00 48 42 00 00 80 3F 00 00 96 43 00 00 00 00 00 00 00 00 00 00 40 40')
+    showMessage("Red line Active  ✓")
+end
+
+
+-- ================= صفحه لاگین =================
+LoginForm = createForm(true)
+LoginForm.Caption = 'Login'
+LoginForm.Width = 300
+LoginForm.Height = 150
+
+UsernameEdit = createEdit(LoginForm)
+UsernameEdit.Left = 50
+UsernameEdit.Top = 30
+UsernameEdit.Width = 200
+
+PasswordEdit = createEdit(LoginForm)
+PasswordEdit.Left = 50
+PasswordEdit.Top = 60
+PasswordEdit.Width = 200
+PasswordEdit.Password = true
+
+LoginBtn = createButton(LoginForm)
+LoginBtn.Left = 100
+LoginBtn.Top = 100
+LoginBtn.Width = 100
+LoginBtn.Height = 30
+LoginBtn.Caption = 'Login'
+
+LoginBtn.onClick = function()
+    local username = UsernameEdit.Text
+    local password = PasswordEdit.Text
+
+    -- چک تاریخ
+    local t = os.date("*t")
+    if t.year > userData.expireDate.year or
+       (t.year == userData.expireDate.year and t.month > userData.expireDate.month) or
+       (t.year == userData.expireDate.year and t.month == userData.expireDate.month and t.day > userData.expireDate.day) then
+        showMessage("Your account has expired!")
+        return
+    end
+
+    -- چک فایل لوکال
+    local f = io.open(loginFile,"r")
+    if f then
+        local content = f:read("*a")
+        f:close()
+        if content ~= username then
+            showMessage("This account is already in use on another system!")
+            return
+        end
+    end
+
+    if username == userData.username and password == userData.password then
+        -- ثبت لاگین
+        local f = io.open(loginFile,"w")
+        f:write(username)
+        f:close()
+
+        LoginForm.hide()
+        showMessage("Login Successful!")
+
+        -- اجرای فرم انتخاب ایمولاتور
+        EmuForm = createForm(true)
+        EmuForm.Caption = 'Select Emulator'
+        EmuForm.Width = 300
+        EmuForm.Height = 60
+
+        EmuButton1 = createButton(EmuForm)
+        EmuButton1.Left = 10
+        EmuButton1.Top = 10
+        EmuButton1.Width = 110
+        EmuButton1.Height = 40
+        EmuButton1.onClick = function() emu = "aow_exe"; startmenu(); EmuForm.hide() end
+        EmuButton1.Caption = 'Gameloop'
+
+        EmuButton2 = createButton(EmuForm)
+        EmuButton2.Left = 170
+        EmuButton2.Top = 10
+        EmuButton2.Width = 110
+        EmuButton2.Height = 40
+        EmuButton2.onClick = function() emu = "NoxVMHandle"; startmenu(); EmuForm.hide() end
+        EmuButton2.Caption = 'Nox Player'
+
+    else
+        showMessage("Login Failed!")
+    end
+end
+
+-- ================= تابع startmenu =================
+function startmenu()
+    local p = io.popen('tasklist /fi "IMAGENAME eq '..emu..'.exe" /fi "MEMUSAGE gt 300000" /nh', 'r')
+    local procInfo = p:read('*a')
+    p:close()
+    local pid = tonumber(procInfo:match('%d+'))
+
+    if not pid then
+        messageDialog("You Must Start The CODM First!", mtWarning, mbOK)
+        closeCE()
+    else
+        openProcess(pid)
+
+        -- فرم هک
+        MyForm = createForm(true)
+        MyForm.Caption = 'Codm GL By url2c '
+        MyForm.Width = 400
+        MyForm.Height = 280
+
+        local buttons = {
+            {140,60,120,40,RPD,'♦️ Red Line ♦️'},
+        }
+
+        for i=1,#buttons do
+            local b = createButton(MyForm)
+            b.Left = buttons[i][1]
+            b.Top = buttons[i][2]
+            b.Width = buttons[i][3]
+            b.Height = buttons[i][4]
+            b.onClick = buttons[i][5]
+            b.Caption = buttons[i][6]
+        end
+
+        local info1l = createLabel(MyForm)
+        info1l.Caption= 'Active Hack in The Game '
+        info1l.Left = 90
+        info1l.Top = 210
+
+        local info2l = createLabel(MyForm)
+        info2l.Caption= 'Hack By @url2c'
+        info2l.Left = 130
+        info2l.Top = 230
+
+        local info3l = createLabel(MyForm)
+        info3l.Caption= ''
+        info3l.Left = 55
+        info3l.Top = 250
+    end
+end
+  </LuaScript>
+</CheatTable>
