@@ -67,7 +67,7 @@ function DL()
 end
 
 function M21()
-    AOBRep('C3 F5 88 40 CD CC 4C 40 CD CC 4C 40 00 00 00 3F','00 00 C0 40 00 00 C0 40 CD CC 4C 40 00 00 00 3F')
+    AOBRep('00 00 C0 40 00 00 C0 40 66 66 66 40 00 00 00 3F','00 00 C0 40 00 00 C0 40 CD CC 4C 40 00 00 00 3F')
     showMessage("Speed Active")
 end
 
@@ -193,13 +193,13 @@ function startmenu()
         MyForm.Height = 280
 
          local buttons = {
-            {10,10,380,40,nr,'♦️ Head Shot ♦️'},
-            {10,60,120,40,M4,'♦️ Super Slide (BR) ♦️'},
+            {10,10,380,40,nr,'♦️ Magic Head ♦️'},
+            {10,60,120,40,M4,'♦️ Super Slide  ♦️'},
             {140,60,120,40,RPD,'♦️ Red Line ♦️'},
-            {270,60,120,40,AK47,'♦️ Rigester Bullets ♦️'},
+            {270,60,120,40,AK47,'♦️ Magic Boody ♦️'},
             {10,110,120,40,BY15,'♦️ Aim bot low ♦️'},
             {140,110,120,40,DL,'♦️ No Recoil m4 ♦️'},
-            {270,110,120,40,M21,'♦️ Speed Running ♦️'},
+            {270,110,120,40,M21,'♦️ pleyer Speed  ♦️'},
             {10,160,120,40,AKS,'♦️ Fast Scope Rifle ♦️'},
             {140,160,120,40,KN,'♦️ High Jump ♦️'},
             {270,160,120,40,MW11,'♦️ Fire Rate DLq ♦️'}
