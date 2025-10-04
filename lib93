@@ -83,10 +83,14 @@ function KN()
     showMessage("High Jump Active")
 end
 
-function M4()
-    AOBRep('00 00 00 00 9A 99 19 3E 00 00 80 3E 00 00 00 40 66 66 66 3F CD CC 4C 3E 00 00 F0 41 66 66 66 3F 00 00 F0 41','00 00 00 00 9A 99 19 3E 00 00 80 3E 00 00 00 40 66 66 66 3F 00 00 C8 42 00 00 F0 41 66 66 66 3F 00 00 F0 41')
+    AOBRep('function M4()
+    AOBRep(
+        '00 00 00 00 9A 99 19 3E 00 00 80 3E 00 00 00 40 66 66 66 3F CD CC 4C 3E 00 00 F0 41 66 66 66 3F 00 00 F0 41',
+        '00 00 00 00 9A 99 19 3E 00 00 80 3E 00 00 00 40 66 66 66 3F CD CC 4C 3E 00 00 7A 44 66 66 66 3F 00 00 F0 41'
+    )
     showMessage("Super Slide Active")
 end
+')
 
 function MW11()
     AOBRep('EC 51 78 3F','00 00 00 00')
